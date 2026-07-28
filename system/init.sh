@@ -36,7 +36,21 @@ else
 fi
 
 echo -e "\n${CYAN}[阶段 2/3] 配置 Root 密码...${NC}"
-NEW_PASS="Hxr52406."
+# 交互式输入密码（-s 隐藏输入内容，防止旁人偷窥）
+read -s -p "$(echo -e ${YELLOW}"请输入你要设置的 Root 密码 (输入时不显示字符): "${NC})" NEW_PASS
+echo "" # 补充一个换行符
+
+# 再次输入以防止手误打错
+read -s -p "$(echo -e ${YELLOW}"请再次输入密码以确认: "${NC})" NEW_PASS_CONFIRM
+echo "" # 补充一个换行符
+
+# 判断两次密码是否一致
+if [ "$NEW_PASS" != "$NEW_PASS_CONFIRM" ]; then
+    echo -e "${RED}[✘] 致命错误：两次输入的密码不一致，脚本已安全中止！${NC}"
+    exit 1
+fi
+
+# 确认无误，执行修改
 echo "root:${NEW_PASS}" | chpasswd
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}[✔] Root 密码已成功修改。${NC}"
@@ -80,6 +94,6 @@ fi
 echo -e "${CYAN}==========================================${NC}"
 echo -e "${GREEN}🎉 服务器初始化全部完成！${NC}"
 echo -e "现在的登录账号: ${YELLOW}root${NC}"
-echo -e "现在的登录密码: ${YELLOW}${NEW_PASS}${NC}"
+echo -e "登录密码为您刚刚手动设置的密码。${NC}"
 echo -e "${CYAN}==========================================${NC}"
 echo -e "${YELLOW}建议您现在打开一个新的终端窗口，测试 root 登录是否正常。${NC}"
