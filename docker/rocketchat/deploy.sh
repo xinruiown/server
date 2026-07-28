@@ -42,6 +42,6 @@ docker compose up -d
 # 自动初始化 MongoDB 副本集 (替代了原网页繁琐的手动初始化)
 echo "等待数据库启动..."
 sleep 10
-docker exec -it rocketchat-mongo-1 mongosh --eval "rs.initiate({_id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }]})"
+docker exec -it rocketchat-mongo-1 mongosh --eval "rs.initiate({_id: 'rs0', members: [{ _id: 0, host: 'mongo:27017' }]})"
 
 echo "🎉 Rocket.Chat 部署完成！请访问 http://服务器IP:3000"
