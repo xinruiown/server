@@ -10,7 +10,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 echo -e "${CYAN}==========================================${NC}"
-echo -e "${YELLOW}       🚀 服务器开机初始化一键脚本        ${NC}"
+echo -e "${YELLOW}      🚀 服务器极速改密与 Root 开启脚本     ${NC}"
 echo -e "${CYAN}==========================================${NC}"
 
 # 1. 强制检查是否为 root 用户执行
@@ -20,22 +20,7 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-echo -e "\n${CYAN}[阶段 1/3] 正在安装基础组件 (curl)...${NC}"
-# 智能识别包管理器并执行对应安装命令
-if command -v apt >/dev/null 2>&1; then
-    echo -e "${GREEN}>>> 检测到 Debian/Ubuntu 系统，使用 apt 安装...${NC}"
-    apt update -y && apt install -y curl
-elif command -v yum >/dev/null 2>&1; then
-    echo -e "${GREEN}>>> 检测到 CentOS/RedHat/Rocky 系统，使用 yum 安装...${NC}"
-    yum update -y && yum install -y curl
-elif command -v apk >/dev/null 2>&1; then
-    echo -e "${GREEN}>>> 检测到 Alpine Linux 系统，使用 apk 安装...${NC}"
-    apk update && apk add curl
-else
-    echo -e "${YELLOW}[!] 未识别到主流包管理器，跳过自动安装 curl。${NC}"
-fi
-
-echo -e "\n${CYAN}[阶段 2/3] 配置 Root 密码...${NC}"
+echo -e "\n${CYAN}[阶段 1/2] 配置 Root 密码...${NC}"
 # 交互式输入密码（-s 隐藏输入内容，防止旁人偷窥）
 read -s -p "$(echo -e ${YELLOW}"请输入你要设置的 Root 密码 (输入时不显示字符): "${NC})" NEW_PASS
 echo "" # 补充一个换行符
@@ -59,7 +44,7 @@ else
     exit 1
 fi
 
-echo -e "\n${CYAN}[阶段 3/3] 开启 Root SSH 登录权限...${NC}"
+echo -e "\n${CYAN}[阶段 2/2] 开启 Root SSH 登录权限...${NC}"
 # 备份原配置文件以防万一
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
 
@@ -92,8 +77,7 @@ else
 fi
 
 echo -e "${CYAN}==========================================${NC}"
-echo -e "${GREEN}🎉 服务器初始化全部完成！${NC}"
+echo -e "${GREEN}🎉 服务器改密与提权全部完成！${NC}"
 echo -e "现在的登录账号: ${YELLOW}root${NC}"
 echo -e "登录密码为您刚刚手动设置的密码。${NC}"
 echo -e "${CYAN}==========================================${NC}"
-echo -e "${YELLOW}建议您现在打开一个新的终端窗口，测试 root 登录是否正常。${NC}"
